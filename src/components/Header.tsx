@@ -3,12 +3,16 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 // ssr: false para que se cargue solo en el navegador, donde existe el localStorage
+
 const UserMenu = dynamic(() => import("./UserMenu"), { ssr: false });
+
 
 export default function Header() {
   const pathname = usePathname();
+  const t = useTranslations("Header");
 
   return (
     <header className="flex justify-between items-center bg-white border-b border-slate-200 px-24 py-4">
@@ -19,7 +23,7 @@ export default function Header() {
         </Link>
 
         <Link href="/plans" className="text-lg font-semibold text-blue-700">
-          Explorar Planes
+          {t("explorar")}
         </Link>
       </div>
 

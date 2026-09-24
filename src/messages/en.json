@@ -1,0 +1,11 @@
+{
+  "Header": {
+    "explorar": "Explore Plans",
+    "iniciarSesion": "Log in",
+    "registrarse": "Sign up"
+  },
+  "Home": {
+    "titulo": "Looking for plans?",
+    "subtitulo": "Find spontaneous events, activities with friends and new experiences near you."
+  }
+}
