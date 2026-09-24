@@ -1,3 +1,5 @@
+import { getSession } from "./session";
+
 // La URL del back se configura en el archivo .env
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -70,4 +72,53 @@ export async function likePlan(planId: string, userId: string) {
     const data = await response.json();
     throw new Error(data.message || "No se pudo dar me gusta");
   }
+}
+
+// Crea un nuevo plan en el back
+//debe tener los mismos campos que un plan, excepto id, likes y creator, que son generados por el back
+export async function createPlan(
+  name: string,
+  description: string,
+  estimatedPrice: number,
+  estimatedTime: number,
+  recomendations: string,
+  address: string,
+  image: string,
+  userId: string
+) {
+  const fallbackImage =
+    "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=1200&q=80";
+
+  const safeImage = image && /^https?:\/\//i.test(image) ? image : fallbackImage;
+
+  const response = await fetch(`${API_URL}/plans`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name,
+      description,
+      estimatedPrice,
+      estimatedTime,
+      recomendations,
+      address,
+      image: safeImage,
+      userId,
+    }),
+  });
+
+  if (!response.ok) {
+    let message = "No se pudo crear el plan";
+
+    try {
+      const data = await response.json();
+      message = data.message || data.error || message;
+    } catch {
+      const text = await response.text();
+      if (text) message = text;
+    }
+
+    throw new Error(message);
+  }
+
+  return response.status === 204 ? null : response.json();
 }
